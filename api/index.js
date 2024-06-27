@@ -16,17 +16,22 @@ app.get('/', (req, res) => {
 
 app.post('/tts', async (req, res) => {
     const { text } = req.body;
-    const tts = new EdgeTTS({
-        voice: 'km-KH-SreymomNeural',
-        lang: 'km-KH',
-    });
+    try {
+        const tts = new EdgeTTS({
+            voice: 'km-KH-SreymomNeural',
+            lang: 'km-KH',
+        });
 
-    const filePath = path.join(__dirname, 'output.mp3');
-    await tts.ttsPromise(text, filePath);
+        const filePath = path.join(__dirname, 'output.mp3');
+        await tts.ttsPromise(text, filePath);
 
-    res.sendFile(filePath, () => {
-        fs.unlinkSync(filePath);  // Delete the file after sending it
-    });
+        res.sendFile(filePath, () => {
+            fs.unlinkSync(filePath);  // Delete the file after sending it
+        });
+    } catch (error) {
+        console.error('Error with TTS:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
 });
 
 app.options('/tts', cors());
