@@ -29,6 +29,8 @@ app.post('/tts', async (req, res) => {
     });
 });
 
+app.options('/tts', cors());
+
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
 });
